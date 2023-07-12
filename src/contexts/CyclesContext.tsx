@@ -1,5 +1,12 @@
-import { ReactNode, createContext, useState, useReducer } from 'react'
+import {
+  ReactNode,
+  createContext,
+  useState,
+  useReducer,
+  useEffect,
+} from 'react'
 import { ActionTypes, Cycle, cyclesReducer } from '../reducers/cycles'
+import { differenceInSeconds } from 'date-fns'
 
 interface CreateCycleData {
   task: string
@@ -26,16 +33,40 @@ interface CyclesContextProviderProps {
 export function CyclesContextProvider({
   children,
 }: CyclesContextProviderProps) {
-  const [cyclesState, dispatch] = useReducer(cyclesReducer, {
-    cycles: [],
-    activeCycleId: null,
-  })
+  const [cyclesState, dispatch] = useReducer(
+    cyclesReducer,
+    {
+      cycles: [],
+      activeCycleId: null,
+    },
+    () => {
+      const storedStateAsJson = localStorage.getItem(
+        '@ignite-timer:cycles-state',
+      )
+
+      if (storedStateAsJson) {
+        return JSON.parse(storedStateAsJson)
+      }
+    },
+  )
 
   const { cycles, activeCycleId } = cyclesState
 
-  const [amountSecondsPassed, setAmountSecondsPassed] = useState<number>(0)
-
   const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId)
+
+  const [amountSecondsPassed, setAmountSecondsPassed] = useState<number>(() => {
+    if (activeCycle) {
+      return differenceInSeconds(new Date(), new Date(activeCycle.startDate))
+    }
+
+    return 0
+  })
+
+  useEffect(() => {
+    const stateJson = JSON.stringify(cyclesState)
+
+    localStorage.setItem('@ignite-timer:cycles-state', stateJson)
+  }, [cyclesState])
 
   function createNewCycle(data: CreateCycleData) {
     const id = String(new Date().getTime())
@@ -54,7 +85,6 @@ export function CyclesContextProvider({
       },
     })
 
-    // setCycles((state) => [...state, newCycle])
     setAmountSecondsPassed(0)
   }
 
@@ -65,16 +95,6 @@ export function CyclesContextProvider({
         activeCycleId,
       },
     })
-
-    // setCycles((state) =>
-    // state.map((cycle) => {
-    //   if (cycle.id === activeCycleId) {
-    //     return { ...cycle, interruptedDate: new Date() }
-    //   } else {
-    //     return cycle
-    //   }
-    // }),
-    // )
 
     document.title = 'Ignite - Timer Pomodoro'
   }
@@ -90,16 +110,6 @@ export function CyclesContextProvider({
         activeCycleId,
       },
     })
-
-    // setCycles((state) =>
-    //   state.map((cycle) => {
-    //     if (cycle.id === activeCycleId) {
-    //       return { ...cycle, finishedDate: new Date() }
-    //     } else {
-    //       return cycle
-    //     }
-    //   }),
-    // )
   }
 
   return (
