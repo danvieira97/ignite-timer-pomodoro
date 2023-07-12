@@ -81,6 +81,7 @@ export function CyclesContextProvider({
 
   function markCurrentCycleAsFinished() {
     dispatch(markCurrentCycleAsFinishedAction())
+    document.title = 'Ciclo Finalizado! :D'
   }
 
   function createNewCycle(data: CreateCycleData) {
@@ -100,6 +101,7 @@ export function CyclesContextProvider({
 
   function interruptCurrentCycle() {
     dispatch(interruptCurrentCycleAction())
+    document.title = 'Ignite - Timer Pomodoro'
   }
 
   return (
