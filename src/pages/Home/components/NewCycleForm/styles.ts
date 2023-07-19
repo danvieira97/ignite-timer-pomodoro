@@ -10,6 +10,10 @@ export const FormContainer = styled.div`
   font-size: 1.125rem;
   font-weight: bold;
   flex-wrap: wrap;
+
+  @media screen and (max-width: 380px) {
+    font-size: 0.875rem;
+  }
 `
 const BaseInput = styled.input`
   background: transparent;
@@ -29,6 +33,10 @@ const BaseInput = styled.input`
   &::placeholder {
     color: ${(props) => props.theme['gray-500']};
   }
+
+  @media screen and (max-width: 380px) {
+    font-size: 0.875rem;
+  }
 `
 
 export const TaskInput = styled(BaseInput)`
@@ -41,4 +49,8 @@ export const TaskInput = styled(BaseInput)`
 
 export const MinutesAmountInput = styled(BaseInput)`
   width: 4rem;
+
+  @media screen and (max-width: 380px) {
+    width: 2rem;
+  }
 `

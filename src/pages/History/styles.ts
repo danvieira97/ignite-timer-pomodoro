@@ -10,6 +10,10 @@ export const HistoryContainer = styled.main`
     font-size: 1.5rem;
     color: ${(props) => props.theme['gray-100']};
   }
+
+  @media screen and (max-width: 580px) {
+    padding: 0.5rem;
+  }
 `
 
 export const HistoryList = styled.div`
@@ -20,7 +24,6 @@ export const HistoryList = styled.div`
   table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 600px;
 
     th {
       background-color: ${(props) => props.theme['gray-600']};
@@ -55,6 +58,28 @@ export const HistoryList = styled.div`
 
       &:last-child {
         padding-right: 1.5rem;
+      }
+    }
+
+    @media screen and (max-width: 580px) {
+      th {
+        &:nth-child(2) {
+          display: none;
+        }
+        &:nth-child(3) {
+          display: none;
+        }
+      }
+
+      td {
+        font-size: 0.8rem;
+
+        &:nth-child(2) {
+          display: none;
+        }
+        &:nth-child(3) {
+          display: none;
+        }
       }
     }
   }
